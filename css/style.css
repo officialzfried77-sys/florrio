@@ -1,0 +1,718 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #0d1715;
+  --panel: rgba(18, 28, 26, 0.86);
+  --panel-border: rgba(255,255,255,0.12);
+  --ui: rgba(20, 34, 34, 0.8);
+  --accent: #8ff3d4;
+  --text: #ecfef8;
+  --muted: rgba(236, 254, 248, 0.75);
+  --danger: #f77b7b;
+  --gold: #ffd773;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Ubuntu", sans-serif;
+  background: radial-gradient(circle at top, #152a28, #0a1211 58%, #050909);
+  color: var(--text);
+}
+
+body {
+  position: relative;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  image-rendering: auto;
+}
+
+#game {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#menu, #hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#hud {
+  z-index: 2;
+}
+
+#menu {
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(6, 11, 12, 0.38);
+}
+
+#menuTop,
+#topBtns,
+#leftBtns,
+#nameRow,
+#biomeBox,
+#hotbar,
+#taskBox,
+#playerCard,
+#chatBox,
+#toasts,
+#death,
+#tooltip,
+#boardPanel,
+#helpPanel,
+#settingsPanel,
+#statsPanel,
+#invPanel,
+#craftPanel,
+#mobPanel {
+  pointer-events: auto;
+}
+
+#menuTop {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+#menuCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 620px;
+  text-align: center;
+}
+
+#logo {
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e8fff4;
+  text-shadow: 0 0 18px rgba(117,255,214,0.8);
+}
+
+.outlined {
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.9), -1px -1px 0 rgba(0,0,0,0.9), 1px -1px 0 rgba(0,0,0,0.9), -1px 1px 0 rgba(0,0,0,0.9);
+}
+
+.ui {
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(152, 166, 176, 0.18), rgba(12, 20, 20, 0.7));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 20px rgba(0,0,0,0.24);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  color: var(--text);
+}
+
+.ibtn, .sq, .bigbtn, .pclose,
+#readyBtn, #biomeBox button {
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.ibtn:hover, .sq:hover, .bigbtn:hover, .pclose:hover,
+#readyBtn:hover, #biomeBox button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.ibtn {
+  width: 48px;
+  height: 48px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.gray { background: linear-gradient(180deg, rgba(107,111,124,0.35), rgba(24,28,35,0.7)); }
+.purple { background: linear-gradient(180deg, rgba(126,96,212,0.4), rgba(28,20,48,0.8)); }
+.olive { background: linear-gradient(180deg, rgba(131,148,66,0.42), rgba(42,44,26,0.7)); }
+.blurple { background: linear-gradient(180deg, rgba(95,116,255,0.45), rgba(26,32,60,0.7)); }
+.red { background: linear-gradient(180deg, rgba(200,87,87,0.45), rgba(44,12,18,0.8)); }
+.cyan { background: linear-gradient(180deg, rgba(86,192,214,0.4), rgba(18,36,46,0.7)); }
+.yellow { background: linear-gradient(180deg, rgba(213,171,73,0.43), rgba(46,35,12,0.7)); }
+.green { background: linear-gradient(180deg, rgba(79,194,106,0.45), rgba(20,52,30,0.75)); }
+.darkred { background: linear-gradient(180deg, rgba(150,62,62,0.45), rgba(32,18,22,0.75)); }
+.blue { background: linear-gradient(180deg, rgba(82,143,211,0.42), rgba(16,28,44,0.7)); }
+.redb { background: linear-gradient(180deg, rgba(204,82,82,0.5), rgba(44,14,27,0.8)); }
+.orange { background: linear-gradient(180deg, rgba(212,147,75,0.5), rgba(40,27,14,0.8)); }
+
+#nameRow {
+  display: flex;
+  width: min(480px, 82vw);
+  gap: 12px;
+}
+
+#nameInput {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 18px;
+  font-size: 1.12rem;
+  color: var(--text);
+  background: rgba(7, 13, 12, 0.55);
+}
+
+#readyBtn {
+  height: 52px;
+  padding: 0 20px;
+  font-weight: 700;
+  background: linear-gradient(180deg, rgba(100, 217, 159, 0.8), rgba(22, 92, 70, 0.7));
+}
+
+#biomeBox {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  width: min(500px, 80vw);
+  padding: 12px;
+  background: rgba(14,19,20,0.62);
+}
+
+#biomeBox button {
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+}
+
+#foot {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0.7;
+  font-size: 12px;
+  text-align: center;
+}
+
+#topBtns {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+#playerCard {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 320px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 16px;
+  background: rgba(17, 24, 24, 0.68);
+ }
+
+#faceImg {
+  width: 52px;
+  height: 52px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgba(255,255,255,0.08);
+}
+
+#hpBar,
+#xpBar,
+#taskBar,
+#taskFill,
+#hpFill,
+#xpFill {
+  border-radius: 999px;
+}
+
+#hpBar {
+  position: relative;
+  width: 180px;
+  height: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.09);
+}
+
+#hpFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #fcbf49);
+}
+
+#hpName {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#hpText {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+#xpBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -12px;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+}
+
+#xpFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, #5ee7ff, #85f0b5);
+}
+
+#lvlText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+#taskBox {
+  position: absolute;
+  top: 110px;
+  left: 20px;
+  width: 230px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(18, 24, 26, 0.7);
+}
+
+#taskTitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+#taskText {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+#taskBar {
+  position: relative;
+  margin-top: 8px;
+  height: 13px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+}
+
+#taskFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background: linear-gradient(90deg, #b5f083, #f0d96c);
+}
+
+#taskPct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+#minimap {
+  position: absolute;
+  right: 20px;
+  top: 24px;
+  border-radius: 14px;
+  border: 2px solid rgba(255,255,255,0.18);
+  background: rgba(6,12,13,0.62);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+#biomeLabel {
+  position: absolute;
+  right: 28px;
+  top: 154px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+#leftBtns {
+  position: absolute;
+  left: 26px;
+  bottom: 108px;
+  display: grid;
+  gap: 12px;
+}
+
+.sq {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sq i {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  font-size: 11px;
+  font-style: normal;
+  opacity: 0.8;
+}
+
+#chatBox {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  width: min(540px, 62vw);
+}
+
+#chatHint,
+#chatInput {
+  width: 100%;
+  height: 42px;
+  border-radius: 12px;
+  padding: 0 14px;
+  background: rgba(12,17,17,0.7);
+  color: var(--text);
+}
+
+#chatHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.78;
+}
+
+#hotbar {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(12,17,17,0.7);
+  border-radius: 12px;
+}
+
+.slot {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+}
+
+.slot.active {
+  border-color: rgba(120,255,210,0.85);
+  box-shadow: 0 0 10px rgba(120,255,210,0.3);
+}
+
+#secWrapRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rkey {
+  position: absolute;
+  left: -22px;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+#toasts {
+  position: absolute;
+  right: 18px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 230px;
+}
+
+.toast {
+  background: rgba(15,20,20,0.76);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  opacity: 0.92;
+}
+
+.panel {
+  position: absolute;
+  background: rgba(15, 21, 20, 0.9);
+  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  box-shadow: 0 24px 40px rgba(0,0,0,0.28);
+}
+
+.panel.small {
+  width: 260px;
+}
+
+.panel.blue { border-color: rgba(109, 170, 255, 0.4); }
+.panel.redp { border-color: rgba(243, 111, 111, 0.4); }
+.panel.orangep { border-color: rgba(249, 169, 83, 0.4); }
+.panel.gray { border-color: rgba(200, 200, 200, 0.26); }
+.panel.yellowp { border-color: rgba(242, 206, 92, 0.38); }
+.panel.greenp { border-color: rgba(95, 217, 122, 0.35); }
+
+#invPanel, #craftPanel, #mobPanel {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 72vw);
+  min-height: 430px;
+  padding: 18px 18px 16px;
+}
+
+.ptitle {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.psub {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.pclose {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+}
+
+.invtools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  margin-bottom: 12px;
+}
+
+.stackLbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+#invSearch {
+  flex: 1;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  padding: 0 10px;
+}
+
+#invList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.invItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 110px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  padding: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.invItem .emoji {
+  font-size: 28px;
+}
+
+#craftRing {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  margin-bottom: 14px;
+  min-height: 90px;
+  border-radius: 24px;
+  background: radial-gradient(circle, rgba(255,255,255,0.06), rgba(0,0,0,0.18));
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+#craftInfo {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+
+.bigbtn {
+  display: block;
+  width: 100%;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(127, 210, 151, 0.52), rgba(32, 76, 52, 0.75));
+  font-weight: 700;
+}
+
+.bigbtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bigbtn.mini {
+  margin-top: 10px;
+  height: 36px;
+}
+
+#settingsPanel, #statsPanel, #helpPanel, #boardPanel {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 18px 16px 16px;
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  margin-bottom: 10px;
+}
+
+#statsBody, #boardBody {
+  margin-top: 14px;
+  line-height: 1.7;
+  font-size: 13px;
+  opacity: 0.88;
+}
+
+.help {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+#death {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(8,10,11,0.52);
+}
+
+.dbox {
+  width: min(360px, 80vw);
+  padding: 28px 24px 20px;
+  text-align: center;
+  border-radius: 18px;
+  background: rgba(18,24,25,0.9);
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.dsub {
+  font-size: 13px;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+#dname {
+  font-size: clamp(28px, 4vw, 54px);
+  margin: 12px 0 18px;
+}
+
+#tooltip {
+  position: absolute;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(15,18,18,0.86);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 12px;
+  transform: translate(16px, -14px);
+}
+
+@media (max-width: 720px) {
+  #menuCenter {
+    transform: scale(0.9);
+  }
+
+  #playerCard {
+    min-width: 240px;
+  }
+
+  #taskBox {
+    width: 190px;
+  }
+
+  #chatBox {
+    width: min(420px, 80vw);
+  }
+}
